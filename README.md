@@ -2,6 +2,17 @@
 This project is developing a program to minimize the amount of snow in a video so that autonomous vehicles can detect road signs and lane markers to improve their navigation in inclement weather.
 
 
+# Dependencies
+-Moviepy                 
+-Ultralytics                    
+-OpenCV-Python                 
+-Numpy                           
+-Pillow
+
+Run this command in your command prompt to install dependencies:                                         
+pip install moviepy ultralytics opencv-python numpy pillow
+
+
 
 # Example
 
