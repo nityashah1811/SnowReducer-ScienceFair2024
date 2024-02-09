@@ -73,7 +73,6 @@ for filename in os.listdir(input_folder):
 
 
 
-input_folder = 'videoPngs'
 mask_folder = 'videoMasks'
 output_folder = 'videoOutputPngs'
 
