@@ -1,3 +1,5 @@
+#VIDEO SPLITTER
+
 from moviepy.editor import VideoFileClip
 import os
 
@@ -18,7 +20,7 @@ times = (i/clip.fps for i in range(int(clip.fps * clip.duration)))
 extract_frames(movie, times, imgdir)
 
 
-
+#PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
 
 from ultralytics import YOLO
 import cv2
@@ -36,7 +38,7 @@ os.makedirs(output_folder, exist_ok=True)
 model = YOLO(model_path)
 
 # Adjust the confidence threshold here
-confidence_threshold = 0.1
+confidence_threshold = 0.1 #Even with a low confidence threshold false detections were not occurring 
 
 # Iterate through images in the input folder
 for filename in os.listdir(input_folder):
@@ -65,7 +67,7 @@ for filename in os.listdir(input_folder):
         cv2.imwrite(output_filename, combined_mask * 255)
 
 
-
+#REMOVING THE PREDICTED SNOW FROM THE IMAGE
 
 from PIL import Image
 import os
@@ -108,6 +110,7 @@ for filename in os.listdir(input_folder):
         # Save the output image
         output_image.save(output_image_path)
 
+#OVERLAY IMAGES AND SHOW FINAL OUTPUT
 
 from PIL import Image
 import os
