@@ -1,1 +1,1 @@
-The masks files I have linked here are what I have annotated, if you annotate on your own using CVAT.ai you can delete those and use your own files.
+The masks files I have linked here are what I have annotated, if you want to annotate yourself and use those annotations just delete the masks folder and crate your own with your images.
