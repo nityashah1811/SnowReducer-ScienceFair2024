@@ -30,8 +30,8 @@ extract_frames(movie, times, imgdir)
 
 
 model_path = 'last.pt'
-input_folder = 'videoPngs'
-output_folder = 'videoMasks'
+input_folder_predection = 'videoPngs'
+mask_folder = 'videoMasks'
 
 # Create the output folder if it doesn't exist
 os.makedirs(output_folder, exist_ok=True)
@@ -73,8 +73,7 @@ for filename in os.listdir(input_folder):
 
 
 
-mask_folder = 'videoMasks'
-output_folder = 'videoOutputPngs'
+removed_output_folder = 'videoOutputPngs'
 
 # Create the output folder if it doesn't exist
 os.makedirs(output_folder, exist_ok=True)
@@ -114,26 +113,26 @@ for filename in os.listdir(input_folder):
 
 
 
-input_folder = 'videoOutputPngs'
-output_filename = 'videoFinal.png'
+
+final_image_name = 'videoFinal.png'
 
 # Get a list of all image files in the input folder
-image_files = [file for file in os.listdir(input_folder) if file.endswith(('.png', '.jpg', '.jpeg'))]
+image_files = [file for file in os.listdir(removed_output_folder) if file.endswith(('.png', '.jpg', '.jpeg'))]
 
 # Ensure there are images in the folder
 if not image_files:
     print("No images found in the folder.")
 else:
     # Load the first image
-    result = Image.open(os.path.join(input_folder, image_files[0])).convert("RGBA")
+    result = Image.open(os.path.join(removed_output_folder, image_files[0])).convert("RGBA")
 
     # Iterate over the remaining images and composite them onto the result
     for file in image_files[1:]:
-        current_image = Image.open(os.path.join(input_folder, file)).convert("RGBA")
+        current_image = Image.open(os.path.join(removed_output_folder, file)).convert("RGBA")
         result = Image.alpha_composite(result, current_image)
 
     # Save the final result
-    result.save(output_filename)
+    result.save(final_image_name)
 
     # Show the final result
     result.show()
