@@ -10,7 +10,7 @@ This project is developing a program to minimize the amount of snow in a video s
 -Pillow
 
 Run this command in your command prompt to install dependencies:                                         
-pip install moviepy ultralytics opencv-python numpy pillow
+```pip install moviepy ultralytics opencv-python numpy pillow``` 
 
 
 
