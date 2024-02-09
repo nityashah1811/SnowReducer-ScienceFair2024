@@ -1,7 +1,13 @@
-#VIDEO SPLITTER
-
+#IMPORT DEPENDENCIES
 from moviepy.editor import VideoFileClip
 import os
+from ultralytics import YOLO
+import cv2
+import numpy as np
+from PIL import Image
+
+
+#VIDEO SPLITTER
 
 def extract_frames(movie, times, imgdir):
     if not os.path.exists(imgdir):
@@ -22,10 +28,6 @@ extract_frames(movie, times, imgdir)
 
 #PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
 
-from ultralytics import YOLO
-import cv2
-import numpy as np
-import os
 
 model_path = 'last.pt'
 input_folder = 'videoPngs'
@@ -69,8 +71,7 @@ for filename in os.listdir(input_folder):
 
 #REMOVING THE PREDICTED SNOW FROM THE IMAGE
 
-from PIL import Image
-import os
+
 
 input_folder = 'videoPngs'
 mask_folder = 'videoMasks'
@@ -112,8 +113,7 @@ for filename in os.listdir(input_folder):
 
 #OVERLAY IMAGES AND SHOW FINAL OUTPUT
 
-from PIL import Image
-import os
+
 
 input_folder = 'videoOutputPngs'
 output_filename = 'videoFinal.png'
