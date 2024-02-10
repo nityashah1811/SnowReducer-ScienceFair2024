@@ -30,11 +30,11 @@ extract_frames(movie, times, imgdir)
 
 
 model_path = 'last.pt'
-input_folder = 'videoPngs'
-output_folder = 'videoMasks'
+unremoved_pngs_folder = 'videoPngs'
+mask_folder = 'videoMasks'
 
 # Create the output folder if it doesn't exist
-os.makedirs(output_folder, exist_ok=True)
+os.makedirs(mask_folder, exist_ok=True)
 
 # Load the YOLO model
 model = YOLO(model_path)
@@ -43,10 +43,10 @@ model = YOLO(model_path)
 confidence_threshold = 0.1 #Even with a low confidence threshold false detections were not occurring 
 
 # Iterate through images in the input folder
-for filename in os.listdir(input_folder):
+for filename in os.listdir(unremoved_pngs_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg')):
-        image_path = os.path.join(input_folder, filename)
-        output_filename = os.path.join(output_folder, f'mask_{filename}')
+        image_path = os.path.join(unremoved_pngs_folder, filename)
+        output_filename = os.path.join(mask_folder, f'mask_{filename}')
 
         img = cv2.imread(image_path)
         H, W, _ = img.shape
@@ -73,18 +73,17 @@ for filename in os.listdir(input_folder):
 
 
 
-mask_folder = 'videoMasks'
-output_folder = 'videoOutputPngs'
+removed_pngs_folder = 'videoOutputPngs'
 
 # Create the output folder if it doesn't exist
-os.makedirs(output_folder, exist_ok=True)
+os.makedirs(removed_pngs_folder, exist_ok=True)
 
 # Iterate through images in the input folder
-for filename in os.listdir(input_folder):
+for filename in os.listdir(unremoved_pngs_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg')):
-        input_image_path = os.path.join(input_folder, filename)
+        input_image_path = os.path.join(unremoved_pngs_folder, filename)
         mask_path = os.path.join(mask_folder, f'mask_{filename}')
-        output_image_path = os.path.join(output_folder, f'output_{filename}')
+        output_image_path = os.path.join(removed_pngs_folder, f'output_{filename}')
 
         # Open the input image and mask
         input_image = Image.open(input_image_path).convert('RGBA')
@@ -114,22 +113,22 @@ for filename in os.listdir(input_folder):
 
 
 
-input_folder = 'videoOutputPngs'
+removed_pngs_folder
 output_filename = 'videoFinal.png'
 
 # Get a list of all image files in the input folder
-image_files = [file for file in os.listdir(input_folder) if file.endswith(('.png', '.jpg', '.jpeg'))]
+image_files = [file for file in os.listdir(removed_pngs_folder) if file.endswith(('.png', '.jpg', '.jpeg'))]
 
 # Ensure there are images in the folder
 if not image_files:
     print("No images found in the folder.")
 else:
     # Load the first image
-    result = Image.open(os.path.join(input_folder, image_files[0])).convert("RGBA")
+    result = Image.open(os.path.join(removed_pngs_folder, image_files[0])).convert("RGBA")
 
     # Iterate over the remaining images and composite them onto the result
     for file in image_files[1:]:
-        current_image = Image.open(os.path.join(input_folder, file)).convert("RGBA")
+        current_image = Image.open(os.path.join(removed_pngs_folder, file)).convert("RGBA")
         result = Image.alpha_composite(result, current_image)
 
     # Save the final result
