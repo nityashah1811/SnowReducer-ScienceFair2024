@@ -40,7 +40,7 @@ os.makedirs(mask_folder, exist_ok=True)
 model = YOLO(model_path)
 
 # Adjust the confidence threshold here
-confidence_threshold = 0.1 #Even with a low confidence threshold false detections were not occurring 
+confidence_threshold = 0.1 #Even with a low confidence threshold false detections were not occurring
 
 # Iterate through images in the input folder
 for filename in os.listdir(unremoved_pngs_folder):
@@ -72,18 +72,19 @@ for filename in os.listdir(unremoved_pngs_folder):
 #REMOVING THE PREDICTED SNOW FROM THE IMAGE
 
 
-
-removed_pngs_folder = 'videoOutputPngs'
+input_folder = 'videoPngs'
+mask_folder = 'videoMasks'
+output_folder = 'videoOutputPngs'
 
 # Create the output folder if it doesn't exist
-os.makedirs(removed_pngs_folder, exist_ok=True)
+os.makedirs(output_folder, exist_ok=True)
 
 # Iterate through images in the input folder
-for filename in os.listdir(unremoved_pngs_folder):
+for filename in os.listdir(input_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg')):
-        input_image_path = os.path.join(unremoved_pngs_folder, filename)
+        input_image_path = os.path.join(input_folder, filename)
         mask_path = os.path.join(mask_folder, f'mask_{filename}')
-        output_image_path = os.path.join(removed_pngs_folder, f'output_{filename}')
+        output_image_path = os.path.join(output_folder, f'output_{filename}')
 
         # Open the input image and mask
         input_image = Image.open(input_image_path).convert('RGBA')
@@ -113,8 +114,9 @@ for filename in os.listdir(unremoved_pngs_folder):
 
 
 
-removed_pngs_folder
+
 output_filename = 'videoFinal.png'
+removed_pngs_folder = 'videoOutputPngs'
 
 # Get a list of all image files in the input folder
 image_files = [file for file in os.listdir(removed_pngs_folder) if file.endswith(('.png', '.jpg', '.jpeg'))]
