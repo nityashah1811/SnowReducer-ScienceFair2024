@@ -192,9 +192,9 @@ def images_to_video(image_folder, video_name, fps, frame_duration):
 
 #CALL THE FUNCTIONS
 
-split_video("longvideo.mp4", "ShorterVideosTesting", segment_length=0.1) #replace with your path to video
+split_video("TestingLongVideo.mp4", "ShorterVideosTesting4", segment_length=0.1)
 
-shorter_videos_folder = "ShorterVideosTesting"
+shorter_videos_folder = "ShorterVideosTesting4"
 
 directory = shorter_videos_folder
 
@@ -206,11 +206,11 @@ for filename in os.listdir(directory):
 
 
 
-image_folder = "FinalOutputPngs"
-video_name = "outputvideo.mp4"
+image_folder = "FinalOutputPngs2"
+video_name = "1MinVideoTest3.mp4"
 fps = 300  # Frames per second
 frame_duration = 30  # Duration to display each image (in frames)  to convert to seconds do seconds for frame times fps0
-organized_images = "OraganizedPngs"
+organized_images = "OraganizedPngs3"
 
 organize_images(image_folder, organized_images)
 
