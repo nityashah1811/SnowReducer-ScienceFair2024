@@ -8,7 +8,6 @@ This project is developing a program to minimize the amount of snow in a video s
 -OpenCV-Python                 
 -Numpy                           
 -Pillow
-                                                                                                                                                                                                                                                                                                                                  
 -Shutil
 
 Run this command in your command prompt to install dependencies:                                         
