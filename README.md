@@ -31,7 +31,7 @@ https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/3e
 
 
 
-While not all of the snow is removed all of the big ones which cause real obstructions are removed. The small ones do not interfere too much with detection therefore it is okay if they are not completely removed.
+While not all of the snow is removed all of the big ones which cause real obstructions are removed. The small ones do not interfere too much with detection therefore it is okay if they are not completely removed. There is also an outline remainging and this is also due to lack of training, to improve this I plan on training another model to detect this outline and run this as another pass to maximize the amount of snow removed.
 
 Note: With more training and annotating this model will become much more accurate to detect snow, with more training even smaller snowflakes can be removed accurately.
 
