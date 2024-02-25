@@ -25,6 +25,10 @@ https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/00
 Output Video:
 
 
+https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/3ec09419-8749-4439-ba7f-aeb9a136f941
+
+
+
 
 
 While not all of the snow is removed all of the big ones which cause real obstructions are removed. The small ones do not interfere too much with detection therefore it is okay if they are not completely removed.
