@@ -17,16 +17,15 @@ Run this command in your command prompt to install dependencies:
 # Example
 
 
-If an input is a video such as this one (about 0.1 seconds long)
-
-https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/31d95681-6902-4ec5-9d4e-12f24ed0cf60
+Input Video:
 
 
-You will get an output like this
+https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/00b80e5e-a0c0-4960-8cba-d4399ded4cbd
 
-![SnowLarge5Final](https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/c5e83353-37f9-4e0f-bddb-97c148501b89)
+Output Video:
 
-If you compare this image to the original video you can see how much snow has been removed. There was a highway sign that was partially covered up and is now clear and visible.
+
+
 
 While not all of the snow is removed all of the big ones which cause real obstructions are removed. The small ones do not interfere too much with detection therefore it is okay if they are not completely removed.
 
