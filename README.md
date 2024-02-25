@@ -7,7 +7,7 @@ This project is developing a program to minimize the amount of snow in a video s
 -Ultralytics                    
 -OpenCV-Python                 
 -Numpy                           
--Pillow <br />
+-Pillow\
 -Shutil
 
 Run this command in your command prompt to install dependencies:                                         
