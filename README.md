@@ -26,7 +26,10 @@ https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/00
 Output Video:
 
 
-https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/3ec09419-8749-4439-ba7f-aeb9a136f941
+
+https://github.com/nityashah1811/SnowReducer-ScienceFair2024/assets/102633096/098f5176-f139-4517-9d57-11569d6be5cf
+
+
 
 
 
