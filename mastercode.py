@@ -9,9 +9,9 @@ import shutil
 
 #SPLIT LONG VIDEO INTO SHORTER SEGMENTS
 def split_video(video_file, output_dir, segment_length=0.2, target_fps=60):
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
+    os.rmdir(output_dir)
+    os.makedirs(output_dir)
+    
     clip = VideoFileClip(video_file)
     duration = clip.duration
     segments = int(duration / segment_length)
