@@ -46,12 +46,6 @@ def snow_remover(path_to_video, video_name):
         clip.save_frame(imgpath, t)
 
 
-    movie = str(path_to_video)
-    imgdir =  "./" + str(video_name) + "videoPngs"
-    clip = VideoFileClip(movie)
-    times = (i/clip.fps for i in range(int(clip.fps * clip.duration)))
-    extract_frames(movie, times, imgdir)
-
 
     #PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
     #FIRST PASS
