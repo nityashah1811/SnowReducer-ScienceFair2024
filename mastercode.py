@@ -27,17 +27,17 @@ def split_video(video_file, output_dir, segment_length=0.2, target_fps=60):
 
 
 #SNOW REMOVAL FUNCTION
-def snow_remover(path_to_video, video_name):
+def snow_remover(path_to_video, video_name, model_path="last.pt", excess_snow_model="SnowExcess.pt"):
     print("\n", video_name, "\n")
 
     # VIDEO SPLITTER INTO FRAMES
     movie = str(path_to_video)
-    imgdir = "./" + str(video_name) + "videoPngs"
+    imgdir = str(video_name) + "videoPngs"
     clip = VideoFileClip(movie)
     times = (i / clip.fps for i in range(int(clip.fps * clip.duration)))
 
-    if not os.path.exists(imgdir):
-        os.makedirs(imgdir)
+    os.rmdir(imgdir)
+    os.makedirs(imgdir)
 
     clip = VideoFileClip(movie)
     #Iterate through the short videos and save all frames of the video
@@ -50,7 +50,7 @@ def snow_remover(path_to_video, video_name):
     #PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
     #FIRST PASS
 
-    model_path = 'last.pt'
+    
     unremoved_pngs_folder = str(video_name) + 'videoPngs'
     mask_folder = str(video_name) + 'videoMasks'
 
@@ -133,7 +133,7 @@ def snow_remover(path_to_video, video_name):
             output_image.save(output_image_path)
 
     #SECOND PASS TO MAXIMIZE AMOUNT OF SNOW REMOVED
-    model_path = 'last.pt'
+    model_path = excess_snow_model
     unremoved_pngs_folder = str(video_name) + 'videoOutputPngs'
     mask_folder = str(video_name) + 'videoMasks2nd'
 
