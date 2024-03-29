@@ -8,7 +8,7 @@ from PIL import Image
 import shutil
 
 #SPLIT LONG VIDEO INTO SHORTER SEGMENTS
-def split_video(video_file, output_dir, segment_length, target_fps=60):
+def split_video(video_file, output_dir, segment_length, target_fps):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -269,7 +269,7 @@ def images_to_video(image_folder, video_name, fps, frame_duration):
 
 #CALL THE FUNCTIONS
 
-split_video("ReplaceWithPathToVideo.mp4", "ShorterVideos", 0.2)
+split_video("ReplaceWithPathToVideo.mp4", "ShorterVideos", 0.2, 60)
 
 shorter_videos_folder = "ShorterVideos"
 
