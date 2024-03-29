@@ -31,15 +31,19 @@ def snow_remover(path_to_video, video_name):
     print("\n", video_name, "\n")
 
     # VIDEO SPLITTER INTO FRAMES
-    def extract_frames(movie, times, imgdir):
-        if not os.path.exists(imgdir):
-            os.makedirs(imgdir)
+    movie = str(path_to_video)
+    imgdir = "./" + str(video_name) + "videoPngs"
+    clip = VideoFileClip(movie)
+    times = (i / clip.fps for i in range(int(clip.fps * clip.duration)))
 
-        clip = VideoFileClip(movie)
-        #Iterate through the short videos and save all frames of the video
-        for t in times:
-            imgpath = os.path.join(imgdir, "{}.png".format(int(t * clip.fps)))
-            clip.save_frame(imgpath, t)
+    if not os.path.exists(imgdir):
+        os.makedirs(imgdir)
+
+    clip = VideoFileClip(movie)
+    #Iterate through the short videos and save all frames of the video
+    for t in times:
+        imgpath = os.path.join(imgdir, "{}.png".format(int(t * clip.fps)))
+        clip.save_frame(imgpath, t)
 
 
     movie = str(path_to_video)
