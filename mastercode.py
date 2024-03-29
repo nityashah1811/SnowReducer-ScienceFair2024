@@ -273,12 +273,11 @@ split_video("ReplaceWithPathToVideo.mp4", "ShorterVideos")
 
 shorter_videos_folder = "ShorterVideos"
 
-directory = shorter_videos_folder
 
 #ITERATE THROUGH EACH VIDEO RUNNING THE SNOW_REMOVED FUNCTION ON EACH ONE
-for filename in os.listdir(directory):
+for filename in os.listdir(shorter_videos_folder):
     if filename.endswith('.mp4'):
-        video_path = os.path.join(directory, filename)
+        video_path = os.path.join(shorter_videos_folder, filename)
         snow_remover(video_path, filename)
 
 
