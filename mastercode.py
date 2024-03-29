@@ -1,4 +1,4 @@
-#IMPORT DEPENDENCIES
+# IMPORT DEPENDENCIES
 from moviepy.editor import VideoFileClip
 import os
 from ultralytics import YOLO
@@ -7,15 +7,16 @@ import numpy as np
 from PIL import Image
 import shutil
 
-#SPLIT LONG VIDEO INTO SHORTER SEGMENTS
+
+# SPLIT LONG VIDEO INTO SHORTER SEGMENTS
 def split_video(video_file, output_dir, segment_length=0.2, target_fps=60):
-    os.rmdir(output_dir)
+    shutil.rmtree(output_dir)
     os.makedirs(output_dir)
-    
+
     clip = VideoFileClip(video_file)
     duration = clip.duration
     segments = int(duration / segment_length)
-    #Go through the duration of the video and save 0.2 second segments of the video.
+    # Go through the duration of the video and save 0.2 second segments of the video.
     for i in range(segments):
         start_time = i * segment_length
         end_time = (i + 1) * segment_length
@@ -26,53 +27,44 @@ def split_video(video_file, output_dir, segment_length=0.2, target_fps=60):
     clip.close()
 
 
-#SNOW REMOVAL FUNCTION
-def snow_remover(path_to_video, video_name, model_path="last.pt", excess_snow_model="SnowExcess.pt"):
-    print("\n", video_name, "\n")
+# SNOW REMOVAL FUNCTION
 
-    # VIDEO SPLITTER INTO FRAMES
-    movie = str(path_to_video)
-    unremoved_pngs_folder = str(video_name) + "videoPngs"
+
+# VIDEO SPLITTER INTO FRAMES
+def extract_frames(movie, output_folder):
+    if os.path.exists(output_folder):
+        shutil.rmtree(output_folder)
+    os.makedirs(output_folder)
     clip = VideoFileClip(movie)
     times = (i / clip.fps for i in range(int(clip.fps * clip.duration)))
-
-    os.rmdir(unremoved_pngs_folder)
-    os.makedirs(unremoved_pngs_folder)
-
-    clip = VideoFileClip(movie)
-    #Iterate through the short videos and save all frames of the video
+    # Iterate through the short videos and save all frames of the video
     for t in times:
-        imgpath = os.path.join(unremoved_pngs_folder, "{}.png".format(int(t * clip.fps)))
+        imgpath = os.path.join(output_folder, "{}.png".format(int(t * clip.fps)))
         clip.save_frame(imgpath, t)
 
 
-
-    #PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
-    #FIRST PASS
-
-
-    mask_folder = str(video_name) + 'videoMasks'
+# PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
+# FIRST PASS
+def generate_masks(mask_folder, model_path, input_folder, condfidence_interval):
 
     # Create the output mask folder
-    os.rmdir(mask_folder)
+    if os.path.exists(mask_folder):
+        shutil.rmtree(mask_folder)
     os.makedirs(mask_folder)
 
     # Load the YOLO model
     model = YOLO(model_path)
 
-    # Adjust the confidence threshold here
-    confidence_threshold = 0.4 #Even with a low confidence threshold false detections were not occurring
-
     # Iterate through images in the input folder
-    for filename in os.listdir(unremoved_pngs_folder):
-        image_path = os.path.join(unremoved_pngs_folder, filename)
+    for filename in os.listdir(input_folder):
+        image_path = os.path.join(input_folder, filename)
         output_filename = os.path.join(mask_folder, f'mask_{filename}')
 
         img = cv2.imread(image_path)
         H, W, _ = img.shape
 
         # Perform inference
-        results = model(img, conf = confidence_threshold)
+        results = model(img, conf=condfidence_interval)
 
         # Initialize an empty mask to accumulate detections
         combined_mask = np.zeros((H, W), dtype=np.uint8)
@@ -90,14 +82,15 @@ def snow_remover(path_to_video, video_name, model_path="last.pt", excess_snow_mo
 
 
 
-    #REMOVING THE PREDICTED SNOW FROM THE IMAGE
-    output_folder = str(video_name) + 'videoOutputPngs'
-    os.rmdir(output_folder)
+# REMOVING THE PREDICTED SNOW FROM THE IMAGE
+def remove_predicted_snow(input_folder, output_folder):
+    if os.path.exists(output_folder):
+        shutil.rmtree(output_folder)
     os.makedirs(output_folder)
 
     # Iterate through images in the input folder
-    for filename in os.listdir(unremoved_pngs_folder):
-        input_image_path = os.path.join(unremoved_pngs_folder, filename)
+    for filename in os.listdir(input_folder):
+        input_image_path = os.path.join(input_folder, filename)
         mask_path = os.path.join(mask_folder, f'mask_{filename}')
         output_image_path = os.path.join(output_folder, f'output_{filename}')
 
@@ -125,85 +118,16 @@ def snow_remover(path_to_video, video_name, model_path="last.pt", excess_snow_mo
         # Save the output image
         output_image.save(output_image_path)
 
-    #SECOND PASS TO MAXIMIZE AMOUNT OF SNOW REMOVED
-    model_path = excess_snow_model
-    first_pass_pngs = str(video_name) + 'videoOutputPngs'
-    mask_folder_2nd = str(video_name) + 'videoMasks2nd'
 
-    os.rmdir(mask_folder_2nd)
-    os.makedirs(mask_folder_2nd)
 
-    # Load the YOLO model
-    model = YOLO(model_path)
+# SECOND PASS TO MAXIMIZE AMOUNT OF SNOW REMOVED
 
-    # Adjust the confidence threshold here
-    confidence_threshold = 0.1  # Even with a low confidence threshold false detections were not occurring
 
-    # Iterate through images in the input folder
-    for filename in os.listdir(first_pass_pngs):
-        image_path = os.path.join(unremoved_pngs_folder, filename)
-        output_filename = os.path.join(mask_folder_2nd, f'mask_{filename}')
-
-        img = cv2.imread(image_path)
-        H, W, _ = img.shape
-
-        # Perform inference
-        results = model(img, conf=confidence_threshold)
-
-        # Initialize an empty mask to accumulate detections
-        combined_mask = np.zeros((H, W), dtype=np.uint8)
-
-        for result in results:
-            for j, mask in enumerate(result.masks.data):
-                mask = mask.numpy()
-                mask = cv2.resize(mask, (W, H))
-
-                # Accumulate the masks
-                combined_mask = np.maximum(combined_mask, mask)
-
-        # Save the combined mask
-        cv2.imwrite(output_filename, combined_mask * 255)
-
-    
-    output_folder_2nd = str(video_name) + 'videoOutputPngs2nd'
-
-    # Create the output folder if it doesn't exist
-    os.makedirs(output_folder, exist_ok=True)
-
-    # Iterate through images in the input folder
-    for filename in os.listdir(first_pass_pngs):
-        input_image_path = os.path.join(first_pass_pngs, filename)
-        mask_path = os.path.join(mask_folder_2nd, f'mask_{filename}')
-        output_image_path = os.path.join(output_folder_2nd, f'output_{filename}')
-
-        # Open the input image and mask
-        input_image = Image.open(input_image_path).convert('RGBA')
-        mask = Image.open(mask_path).convert('L')
-
-        # Create a new image with the same size as the input image
-        output_image = Image.new('RGBA', input_image.size)
-
-        # Get the pixel data from the images
-        input_pixels = input_image.load()
-        mask_pixels = mask.load()
-        output_pixels = output_image.load()
-
-        # Process every pixel
-        for y in range(input_image.height):
-            for x in range(input_image.width):
-                # If the mask pixel is white, make the output pixel transparent
-                if mask_pixels[x, y] == 255:
-                    output_pixels[x, y] = (0, 0, 0, 0)
-                else:
-                    output_pixels[x, y] = input_pixels[x, y]
-
-        # Save the output image
-        output_image.save(output_image_path)
-
-    # Overlay images
+# Overlay images
+def overlay_images(output_filename, removed_pngs_folder):
+    if os.path.exists("FinalOutputPngs2nd"):
+        shutil.rmtree("FinalOutputPngs2nd")
     os.makedirs("FinalOutputPngs2nd", exist_ok=True)
-    output_filename = "FinalOutputPngs2nd/" + str(video_name) + "videoFinal2nd.png"
-    removed_pngs_folder = str(video_name) + 'videoOutputPngs2nd'
 
 
 
@@ -225,7 +149,10 @@ def snow_remover(path_to_video, video_name, model_path="last.pt", excess_snow_mo
         # Save the final result
         result.save(output_filename)
 
-#ORGANIZE IMAGES NUMERICALLY TO ENSURE THE VIDEO IS CREATED IN THE RIGHT ORDER
+
+
+
+# ORGANIZE IMAGES NUMERICALLY TO ENSURE THE VIDEO IS CREATED IN THE RIGHT ORDER
 def organize_images(input_folder, output_folder):
     # Ensure output folder exists
     if not os.path.exists(output_folder):
@@ -242,7 +169,7 @@ def organize_images(input_folder, output_folder):
         shutil.copyfile(os.path.join(input_folder, image_file), os.path.join(output_folder, f'{idx}.png'))
 
 
-#CONVERT SNOW REMOVED IMAGES TO VIDEO
+# CONVERT SNOW REMOVED IMAGES TO VIDEO
 def images_to_video(image_folder, video_name, fps, frame_duration):
     images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
     frame = cv2.imread(os.path.join(image_folder, images[0]))
@@ -257,21 +184,35 @@ def images_to_video(image_folder, video_name, fps, frame_duration):
     cv2.destroyAllWindows()
     video.release()
 
-#CALL THE FUNCTIONS
 
-split_video("ReplaceWithPathToVideo.mp4", "ShorterVideos")
+# CALL THE FUNCTIONS
+
+split_video("20sVideoTest.mp4", "ShorterVideos")
 
 shorter_videos_folder = "ShorterVideos"
 
 
-#ITERATE THROUGH EACH VIDEO RUNNING THE SNOW_REMOVED FUNCTION ON EACH ONE
+# ITERATE THROUGH EACH VIDEO RUNNING THE SNOW_REMOVED FUNCTION ON EACH ONE
 for filename in os.listdir(shorter_videos_folder):
     if filename.endswith('.mp4'):
         video_path = os.path.join(shorter_videos_folder, filename)
-        snow_remover(video_path, filename)
+        movie = str(video_path)
+        unremoved_pngs_folder = str(filename) + "videoPngs"
 
+        extract_frames(movie, unremoved_pngs_folder)
+        mask_folder = str(filename) + 'videoMasks'
+        generate_masks(mask_folder, "last.pt", unremoved_pngs_folder, 0.4)
+        output_folder = str(filename) + 'videoOutputPngs'
 
+        remove_predicted_snow(unremoved_pngs_folder, output_folder)
+        mask_folder = str(filename) + 'videoMasks2nd'
+        generate_masks(mask_folder, "SnowExcess.pt", output_folder, 0.1)
+        output_folder_2nd = str(filename) + "videoOutputPngs2nd"
+        remove_predicted_snow(output_folder, output_folder_2nd)
 
+        output_filename = "FinalOutputPngs2nd/" + str(filename) + "videoFinal2nd.png"
+        removed_pngs_folder = str(filename) + 'videoOutputPngs2nd'
+        overlay_images(output_filename, removed_pngs_folder)
 
 image_folder = "FinalOutputPngs2nd"
 video_name = "output.mp4"
