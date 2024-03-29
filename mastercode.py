@@ -83,7 +83,7 @@ def generate_masks(mask_folder, model_path, input_folder, condfidence_interval):
 
 
 # REMOVING THE PREDICTED SNOW FROM THE IMAGE
-def remove_predicted_snow(input_folder, output_folder):
+def remove_predicted_snow(input_folder, output_folder, mask_folder):
     if os.path.exists(output_folder):
         shutil.rmtree(output_folder)
     os.makedirs(output_folder)
@@ -204,11 +204,11 @@ for filename in os.listdir(shorter_videos_folder):
         generate_masks(mask_folder, "last.pt", unremoved_pngs_folder, 0.4)
         output_folder = str(filename) + 'videoOutputPngs'
 
-        remove_predicted_snow(unremoved_pngs_folder, output_folder)
+        remove_predicted_snow(unremoved_pngs_folder, output_folder, mask_folder)
         mask_folder = str(filename) + 'videoMasks2nd'
         generate_masks(mask_folder, "SnowExcess.pt", output_folder, 0.1)
         output_folder_2nd = str(filename) + "videoOutputPngs2nd"
-        remove_predicted_snow(output_folder, output_folder_2nd)
+        remove_predicted_snow(output_folder, output_folder_2nd, mask_folder)
 
         output_filename = "FinalOutputPngs2nd/" + str(filename) + "videoFinal2nd.png"
         removed_pngs_folder = str(filename) + 'videoOutputPngs2nd'
