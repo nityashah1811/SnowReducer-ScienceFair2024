@@ -27,7 +27,6 @@ def split_video(video_file, output_dir, segment_length=0.2, target_fps=60):
     clip.close()
 
 
-# SNOW REMOVAL FUNCTION
 
 
 # VIDEO SPLITTER INTO FRAMES
@@ -44,7 +43,6 @@ def extract_frames(movie, output_folder):
 
 
 # PREDICTING SNOW IN THE IMAGE AND OUTPUTTING MASK OF PREDECTIONS
-# FIRST PASS
 def generate_masks(mask_folder, model_path, input_folder, condfidence_interval):
 
     # Create the output mask folder
@@ -120,8 +118,6 @@ def remove_predicted_snow(input_folder, output_folder, mask_folder):
 
 
 
-# SECOND PASS TO MAXIMIZE AMOUNT OF SNOW REMOVED
-
 
 # Overlay images
 def overlay_images(output_filename, removed_pngs_folder):
@@ -192,7 +188,7 @@ split_video("20sVideoTest.mp4", "ShorterVideos")
 shorter_videos_folder = "ShorterVideos"
 
 
-# ITERATE THROUGH EACH VIDEO RUNNING THE SNOW_REMOVED FUNCTION ON EACH ONE
+# ITERATE THROUGH EACH VIDEO RUNNING THE FUNCTIONS ON EACH ONE
 for filename in os.listdir(shorter_videos_folder):
     if filename.endswith('.mp4'):
         video_path = os.path.join(shorter_videos_folder, filename)
