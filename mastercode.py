@@ -201,8 +201,8 @@ for filename in os.listdir(shorter_videos_folder):
         output_folder = str(filename) + 'videoOutputPngs'
 
         remove_predicted_snow(unremoved_pngs_folder, output_folder, mask_folder)
-        mask_folder = str(filename) + 'videoMasks2nd'
-        generate_masks(mask_folder, "SnowExcess.pt", output_folder, 0.1)
+        mask_folder_2nd = str(filename) + 'videoMasks2nd'
+        generate_masks(mask_folder_2nd, "SnowExcess.pt", output_folder, 0.1)
         output_folder_2nd = str(filename) + "videoOutputPngs2nd"
         remove_predicted_snow(output_folder, output_folder_2nd, mask_folder)
 
