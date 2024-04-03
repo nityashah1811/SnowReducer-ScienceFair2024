@@ -5,7 +5,7 @@ This project is developing a program to minimize the amount of snow in a video s
 # Dependencies
 -Moviepy                 
 -Ultralytics                    
--OpenCV-Python                 
+-OpenCV                 
 -Numpy                           
 -Pillow\
 -Shutil
